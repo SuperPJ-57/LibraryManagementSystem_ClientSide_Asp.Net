@@ -1,0 +1,100 @@
+﻿@model AddUserModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Admin</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        .form-section {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .form-section .close-icon {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+        }
+
+        .form-section h3 {
+            margin-bottom: 20px;
+            color: #255D81;
+        }
+
+        .form-control {
+            margin-bottom: 15px;
+        }
+
+        .btn-custom {
+            background-color: #255D81;
+            border-radius: 25px;
+            color: white;
+        }
+        .btn-custom:hover{
+            border: 3px solid #255d81;
+            background: white;
+            color:black;
+            font-weight:bolder;
+        }
+        @@media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-section">
+            
+            <h3><img src="~/resources/admin.png" alt="admin" />Add Admin</h3>
+            
+            <form asp-action="AddAdmin" asp-controller="User" method="post" >
+                <div class="form-group">
+                    <label for="Email">Email</label>
+                    <input type="email" class="form-control" id="Email" name="Email" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    <input type="text" class="form-control" id="Name" name="UserName" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label for="Password">Password</label>
+                    <input type="password" class="form-control" id="Password" name="Password" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <label for="Role">Role</label>
+                    <input type="text" class="form-control" id="Role" name="Role" placeholder="Role">
+                </div>
+                
+                <button type="submit" class="btn btn-custom btn-block">Sign Up</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

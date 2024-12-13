@@ -1,0 +1,121 @@
+﻿@model UsersEntity
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 900px;
+            /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+        }
+
+        .login, .register {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .login {
+            background-color: #fff;
+        }
+
+        .register {
+            background-color: #255D81;
+            color: #fff;
+            text-align: center;
+        }
+
+        .register a {
+            color: #fff;
+        }
+
+        .form-control {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #255D81;
+            border: none;
+        }
+        .btn-primary:hover{
+            background: #D9D9D9;
+                color: #255D81;
+        }
+
+        .icon {
+            display: block;
+            margin: 0 auto 10px;
+            width: 80px;
+        }
+        .btn-register{
+            background:#D9D9D9;
+        }
+        .btn-register:hover{
+                border: 1px solid #D9D9D9;
+                background-color: #041925;
+            color:white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login">
+            <div class="text-center mb-4">
+                <img src="~/resources/bookicon.png" alt="Book Icon" style="width: 170px;">
+                <h2>HSMSS Library Management System</h2>
+                <p>Please enter your credentials</p>
+            </div>
+            <form asp-action="Login">
+                <div class="form-group">
+                    <label for="Username" class="control-label">Username</label>
+                    <input id="Username" name="Username" type="text" class="form-control" placeholder="Username">
+                    <span class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="Password" class="control-label">Password</label>
+                    <input id="Password" name="Password" type="password" class="form-control" placeholder="Password">
+                    <span class="text-danger"></span>
+                </div>
+                <a href="#" class="d-block mb-3" style="color:#255D81">Forgot Password?</a>
+                <button type="submit" class="btn btn-primary btn-block">Log In</button>
+            </form>
+        </div>
+        <div class="register text-center d-flex flex-column justify-content-center">
+            <div class="mb-4">
+                <img src="~/resources/bookicon.png" alt="Book Icon" style="width: 100px;">
+                <h2>HSMSS</h2> 
+                <h2>Library</h2>
+                <br /><br />
+                <p>New to our platform?<br /> <h5>Register Now</h5></p>
+            </div>
+             <form asp-action="Index" asp-controller="User" method="post">
+                <button class="btn btn-register btn-light btn-block fw-bolder ">
+                 </form>
+            
+                Register
+            </button>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

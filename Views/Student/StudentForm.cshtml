@@ -1,0 +1,75 @@
+﻿@model StudentViewModel
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-mortarboard" style="font-size:2.5rem"></i> 
+
+            <h1 class="h3 ms-3 mt-2">Student Info</h1>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-controller="Student" asp-action="@(Model.Student==null?"Add":"Update")" method="post">
+                <div class="row g-3">
+                    <input type="text" asp-for="Student.StudentId" hidden/>
+                    <div class="col-12">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" value="@(Model.Student!=null?@Model.Student.Name:"")" asp-for="Student.Name" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="faculty" class="form-label">Department</label>
+                        <input type="text" class="form-control" id="faculty" value="@(Model.Student!=null?@Model.Student.Department:"")" asp-for="Student.Department" required>
+                    </div>
+
+                   
+
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" value="@(Model.Student!=null?@Model.Student.Email:"")" asp-for="Student.Email" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="contactNo" class="form-label">Contact No.</label>
+                        <input type="tel" class="form-control" id="contactNo" value="@(Model.Student!=null?@Model.Student.ContactNumber:"")" asp-for="Student.ContactNumber" required>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            @(Model.Student==null?"Add Student":"Update Student")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-primary {
+        background-color: #255D81;
+        border-color: #255D81;
+    }
+
+        .btn-primary:hover {
+            background-color: white;
+            color: #255D81;
+            border-color: #255D81;
+        }
+
+    .form-control:focus {
+        border-color: #255D81;
+        box-shadow: 0 0 0 0.25rem rgba(37, 93, 129, 0.25);
+    }
+
+    .card input, .card textarea {
+        border: 1px solid #255D81;
+    }
+
+
+    .card {
+        border: 2px solid #255D81;
+    }
+</style>
+

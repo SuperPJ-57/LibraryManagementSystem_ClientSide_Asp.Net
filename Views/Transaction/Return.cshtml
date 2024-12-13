@@ -1,0 +1,86 @@
+﻿@{
+    ViewData["Title"] = "Return Book";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-arrow-counterclockwise ms-2" style="font-size:2rem; color:#255D81;"></i> <!-- Downward arrow -->
+
+            <h1 class="h3 mb-0">Return Book</h1>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-controller="Issuing" asp-action="Return" method="post">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="bookId" class="form-label">Book ID</label>
+                        <input type="text" class="form-control" id="bookId" name="BookId" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="userId" class="form-label">User ID</label>
+                        <input type="text" class="form-control" id="userId" name="UserId" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="bookTitle" class="form-label">Book Title</label>
+                        <input type="text" class="form-control" id="bookTitle" name="BookTitle" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="isbn" class="form-label">ISBN</label>
+                        <input type="text" class="form-control" id="isbn" name="ISBN" required>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="date" class="form-label">Return Date</label>
+                        <input type="date" class="form-control" id="date" name="Date" required>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            
+                            Return
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-primary {
+        background-color: #255D81;
+        border-color: #255D81;
+    }
+
+        .btn-primary:hover {
+            background-color: white;
+            color: #255D81;
+            border-color: #255D81;
+        }
+
+    .btn-submit {
+        width: 10rem;
+        height: 2.8rem;
+        font-size:1.2rem;
+    }
+    .form-control:focus {
+        border-color: #255D81;
+        box-shadow: 0 0 0 0.25rem rgba(37, 93, 129, 0.25);
+    }
+
+    .card input, .card textarea {
+        border: 1px solid #255D81;
+    }
+
+
+    .card {
+        border: 2px solid #255D81;
+    }
+</style>
+

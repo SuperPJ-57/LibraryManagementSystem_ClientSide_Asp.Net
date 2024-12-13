@@ -1,0 +1,151 @@
+﻿@{
+    ViewData["Title"] = "Transaction History";
+}
+@model TransactionViewModel
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <img src="/resources/transaction1.png" alt="Transaction Icon" style="width: 32px; height: 32px; margin-right: 12px;">
+            <h1 class="h3 mb-0">Transaction</h1>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search transactions..." id="searchInput">
+                        <button class="btn btn-primary" type="button">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="d-flex gap-2">
+                        <select class="form-select w-auto" id="transactionType">
+                            <option value="">Transaction Type</option>
+                            <option value="borrow">Borrow</option>
+                            <option value="return">Return</option>
+                        </select>
+                        <input type="date" class="form-control w-auto" id="dateFilter">
+                        <button class="btn btn-outline-secondary" type="button" id="clearFilters">
+                            <i class="bi bi-eraser-fill"></i>
+                            Clear Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>T_ID</th>
+                            <th>S_ID</th>
+                            <th>Student Name</th>
+                            <th>B_ID</th>
+                            <th>Book Name</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var transaction in Model.transactionDetails)
+                        {
+                            <tr>
+                                <td>@transaction.TransactionId</td>
+                                <td>@transaction.StudentId</td>
+                                <td>@transaction.Name</td>
+                                <td>@transaction.BookId</td>
+                                <td>@transaction.Title</td>
+                                <td>@transaction.TransactionType</td>
+                                <td>@transaction.Date.ToString("yyyy-MM-DD")</td>
+                                <td>@transaction.DueDate.ToString("yyyy-MM-DD")</td>
+                                <td>@transaction.Status</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <nav class="mt-4">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-primary {
+        background-color: #255D81;
+        border-color: #255D81;
+    }
+
+        .btn-primary:hover {
+            background-color: white;
+            color: #255D81;
+            border-color: #255D81;
+        }
+
+    .btn-outline-secondary {
+        color: #255D81;
+        border-color: #255D81;
+    }
+
+        .btn-outline-secondary:hover {
+            background-color: #255D81;
+            color: white;
+        }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #255D81;
+        box-shadow: 0 0 0 0.25rem rgba(37, 93, 129, 0.25);
+    }
+
+    .page-link {
+        color: #255D81;
+    }
+
+    .page-item.active .page-link {
+        background-color: #255D81;
+        border-color: #255D81;
+    }
+
+    .form-select option:checked {
+        background-color: #255D81;
+        color: white;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('searchInput');
+        const transactionType = document.getElementById('transactionType');
+        const dateFilter = document.getElementById('dateFilter');
+        const clearFiltersBtn = document.getElementById('clearFilters');
+
+        clearFiltersBtn.addEventListener('click', function () {
+            searchInput.value = '';
+            transactionType.value = '';
+            dateFilter.value = '';
+        });
+    });
+</script>
+

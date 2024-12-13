@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSMSS Library - @ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #255D81;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary-color);
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: all 0.3s;
+        }
+
+        .sidebar-collapsed {
+            margin-left: calc(var(--sidebar-width) * -1);
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            transition: all 0.3s;
+            min-height: 100vh;
+            background-color: white;
+        }
+
+        .main-content-expanded {
+            margin-left: 0;
+        }
+
+        .sidebar-brand {
+            color: white;
+            text-decoration: none;
+            padding: 1.5rem;
+            display: block;
+            font-size: 1.25rem;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover, .nav-link[aria-expanded="true"] {
+            color: white;
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-link.active {
+            color: white;
+            background-color: rgba(255,255,255,0.15);
+        }
+        .nav-link:focus{
+            color:white;
+        }
+        .submenu {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .submenu .nav-link {
+            padding-left: 3rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: white;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .hamburger {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1050;
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        @@media (max-width: 768px) {
+            .sidebar {
+                margin-left: calc(var(--sidebar-width) * -1);
+                z-index: 1040;
+            }
+
+            .sidebar.show {
+                margin-left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding-top: 4rem;
+            }
+
+            .hamburger {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="hamburger" type="button" id="sidebarToggle">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <nav class="sidebar" id="sidebar">
+        <a href="/" class="sidebar-brand">HSMSS LIBRARY</a>
+        <div class="nav flex-column">
+            <a asp-controller="Dashboard" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+
+            <a href="#settingsSubmenu" class="nav-link" data-bs-toggle="collapse" aria-expanded="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Settings" ? "true" : "false")">
+                <i class="bi bi-gear"></i> Settings
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <div class="collapse @(ViewContext.RouteData.Values["controller"]?.ToString() == "Settings" ? "show" : "") submenu" id="settingsSubmenu">
+                <a asp-controller="Settings" asp-action="General" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "General" ? "active" : "")">General</a>
+                <a asp-controller="Settings" asp-action="System" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "System" ? "active" : "")">System</a>
+            </div>
+
+            <a href="#authorSubmenu" class="nav-link" data-bs-toggle="collapse" aria-expanded="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Author" ? "true" : "false")">
+                <i class="bi bi-person"></i> Author
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <div class="collapse @(ViewContext.RouteData.Values["controller"]?.ToString() == "Author" ? "show" : "") submenu" id="authorSubmenu">
+                <a asp-controller="Author" asp-action="AuthorForm" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Add" ? "active" : "")">Add/Edit Author</a>
+                <a asp-controller="Author" asp-action="Manage" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Manage" ? "active" : "")">Manage Authors</a>
+            </div>
+
+            <a href="#booksSubmenu" class="nav-link" data-bs-toggle="collapse" aria-expanded="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Books" ? "true" : "false")">
+                <i class="bi bi-book"></i> Books
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <div class="collapse @(ViewContext.RouteData.Values["controller"]?.ToString() == "Book" ? "show" : "") submenu" id="booksSubmenu">
+                <a asp-controller="Book" asp-action="BookForm" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "AddBookForm" ? "active" : "")">Add/Edit Book</a>
+                <a asp-controller="Book" asp-action="Manage" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Manage" ? "active" : "")">Manage Books</a>
+            </div>
+
+            <a href="#studentsSubmenu" class="nav-link" data-bs-toggle="collapse" aria-expanded="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Student" ? "true" : "false")">
+                <i class="bi bi-mortarboard"></i> Student
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <div class="collapse @(ViewContext.RouteData.Values["controller"]?.ToString() == "Student" ? "show" : "") submenu" id="studentsSubmenu">
+                <a asp-controller="Student" asp-action="StudentForm" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "RegisterStudent" ? "active" : "")">Add/Edit Student</a>
+                <a asp-controller="Student" asp-action="Manage" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Manage" ? "active" : "")">Manage Students</a>
+            </div>
+
+            <a href="#transactionSubmenu" class="nav-link" data-bs-toggle="collapse" aria-expanded="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Transaction" ? "true" : "false")">
+                <i class="bi bi-arrow-left-right"></i> Transaction
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <div class="collapse @(ViewContext.RouteData.Values["controller"]?.ToString() == "Transaction" ? "show" : "") submenu" id="transactionSubmenu">
+                <a asp-controller="Transaction" asp-action="Display" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Display" ? "active" : "")">Transaction History</a>
+                <a asp-controller="Transaction" asp-action="Borrow" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Borrow" ? "active" : "")">Borrow Book</a>
+                <a asp-controller="Transaction" asp-action="Return" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Return" ? "active" : "")">Return Book</a>
+            </div>
+
+
+            <a asp-controller="Auth" asp-action="Logout" class="nav-link mt-auto">
+                <i class="bi bi-box-arrow-left"></i> Log Out
+            </a>
+        </div>
+    </nav>
+
+    <main class="main-content" id="main">
+        @RenderBody()
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const main = document.getElementById('main');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('show');
+            }
+
+            sidebarToggle.addEventListener('click', toggleSidebar);
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                const isMobile = window.innerWidth < 768;
+                if (isMobile && !sidebar.contains(event.target) && event.target !== sidebarToggle) {
+                    sidebar.classList.remove('show');
+                }
+            });
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

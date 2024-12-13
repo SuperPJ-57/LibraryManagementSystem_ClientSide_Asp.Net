@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Add Author";
+}
+@model AuthorViewModel
+<link href="/css/site.css" rel="stylesheet" />
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <img src="/resources/user.png" alt="Author Icon" style="width: 32px; height: 32px; margin-right: 12px;">
+            <h1 class="h3 mb-0">Author Info</h1>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-controller="Author" asp-action="@(Model.Author==null?"Register":"Update")" method="post">
+                <div class="row g-3">
+                    
+                    
+                    <input type="text" class="form-control" id="authorId" asp-for="Author.AuthorId" hidden >
+                   
+                    <div class="col-md-6">
+                        <label for="authorName" class="form-label">Author Name</label>
+                        <input type="text" class="form-control" id="authorName" asp-for="Author.Name" value="@(Model.Author!=null?@Model.Author.Name:"")" required>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="bio" class="form-label">Bio</label>
+                        <textarea class="form-control" id="bio" asp-for="Author.Bio" value="@(Model.Author!=null?@Model.Author.Bio:"")" rows="4"></textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            @(Model.Author==null?"Add Author":"Update Author")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-primary {
+        background-color: #255D81;
+        border-color: #255D81;
+    }
+
+        .btn-primary:hover {
+            background-color: white;
+            color: #255D81;
+            border-color: #255D81;
+        }
+        .card input,.card textarea{
+            border: 1px solid  #255D81;
+        }
+    .form-control:focus {
+        border: 2px solid #255D81;
+        box-shadow: 0 0 0 0.25rem rgba(37, 93, 129, 0.25);
+    }
+    .card{
+        border: 2px solid #255D81;
+
+    }
+</style>
+

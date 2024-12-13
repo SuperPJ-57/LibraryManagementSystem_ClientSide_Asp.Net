@@ -1,0 +1,108 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+@model DashboardData
+<link href="/css/site.css" rel="stylesheet" />
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Dashboard</h1>
+        <div class="user-info d-flex align-items-center">
+            <img src="/resources/user.png" alt="User Icon" style="width: 24px; height: 24px; margin-right: 8px;">            
+            <span class="fw-bold">@Model.Username</span>
+            <span class="text-muted ms-2">@Model.Role</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Book Status</h5>
+                    <div style="height: 300px; position: relative;">
+                        <canvas id="bookStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="row">
+                <div class="col-sm-4 mb-4">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <img src="" alt="Total User Base Icon" class="mb-2" style="width: 48px; height: 48px;">
+                            <h2 class="card-title">0150</h2>
+                            <p class="card-text">Total User Base</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 mb-4">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <img src="" alt="Total Book Count Icon" class="mb-2" style="width: 48px; height: 48px;">
+                            <h2 class="card-title">01500</h2>
+                            <p class="card-text">Total Book Count</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 mb-4">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <img src="" alt="Branch Count Icon" class="mb-2" style="width: 48px; height: 48px;">
+                            <h2 class="card-title">0010</h2>
+                            <p class="card-text">Branch Count</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Overdue Borrowers</h5>
+                    <ul class="list-group">
+                        @for (int i = 0; i < 5; i++)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <img src="" alt="User Icon" style="width: 24px; height: 24px; margin-right: 8px;">
+                                    <span>ABC XYZ</span>
+                                </div>
+                                <span>Borrowed ID: 10</span>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <img src="" alt="Refresh Icon" style="width: 16px; height: 16px;">
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('bookStatusChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Total Borrowed Books', 'Total Returned Books'],
+                    datasets: [{
+                        data: [300, 100],
+                        backgroundColor: ['#36A2EB', '#FF6384']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}
+

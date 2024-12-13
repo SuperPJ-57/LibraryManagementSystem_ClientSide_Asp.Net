@@ -1,0 +1,76 @@
+﻿@model BookViewModel
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <img src="/resources/Vector.png" alt="Book Icon" style="width: 32px; height: 32px; margin-right: 12px;">
+            <h1 class="h3 mb-0">Books Details</h1>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-controller="Book" asp-action="@(Model.Book!=null?"Update":"Register")" method="post">
+                <div class="row g-3">
+                    <input type="text" id="id" asp-for="Book.BookId" hidden>
+
+                    <div class="col-md-6">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" value="@(Model.Book!=null?@Model.Book.Title:"")" asp-for="Book.Title" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="isbn" class="form-label">ISBN</label>
+                        <input type="text" class="form-control" id="isbn" value="@(Model.Book!=null?@Model.Book.ISBN:"")" asp-for="Book.ISBN" required>
+                    </div>
+
+                    
+
+                    <div class="col-md-6">
+                        <label for="genre" class="form-label">Genre</label>
+                        <input type="text" class="form-control" id="genre"  value="@(Model.Book!=null?@Model.Book.Genre:"")" asp-for="Book.Genre" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="authorId" class="form-label">Author ID</label>
+                        <input type="text" class="form-control" id="authorId" value="@(Model.Book!=null?@Model.Book.AuthorId:"")" asp-for="Book.AuthorId" required>
+                    </div>
+
+                   
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            @(Model.Book==null?"Add Book":"Update Book")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-primary {
+        background-color: #255D81;
+        border-color: #255D81;
+    }
+
+        .btn-primary:hover {
+            background-color: white;
+            color: #255D81;
+            border-color: #255D81;
+        }
+
+    .form-control:focus {
+        border-color: #255D81;
+        box-shadow: 0 0 0 0.25rem rgba(37, 93, 129, 0.25);
+    }
+
+    .card input, .card textarea {
+        border: 1px solid #255D81;
+    }
+
+
+    .card {
+        border: 2px solid #255D81;
+    }
+</style>
+

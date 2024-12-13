@@ -1,0 +1,120 @@
+
+:root {
+    --primary-color: #255D81;
+    --sidebar-width: 250px;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--primary-color);
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: all 0.3s;
+}
+
+.sidebar-collapsed {
+    margin-left: calc(var(--sidebar-width) * -1);
+}
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    transition: all 0.3s;
+    min-height: 100vh;
+    background-color: white;
+}
+
+.main-content-expanded {
+    margin-left: 0;
+}
+
+.sidebar-brand {
+    color: white;
+    text-decoration: none;
+    padding: 1.5rem;
+    display: block;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-link {
+    color: rgba(255,255,255,0.8);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .nav-link:hover, .nav-link[aria-expanded="true"] {
+        color: white;
+        background-color: rgba(255,255,255,0.1);
+    }
+
+    .nav-link.active {
+        color: white;
+        background-color: rgba(255,255,255,0.15);
+    }
+
+    .nav-link:focus {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+    }
+
+.submenu {
+    background-color: rgba(0,0,0,0.1);
+}
+
+    .submenu .nav-link {
+        padding-left: 3rem;
+    }
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+    .btn-primary:hover {
+        background-color: white;
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+.hamburger {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1050;
+    background-color: var(--primary-color);
+    border: none;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        margin-left: calc(var(--sidebar-width) * -1);
+        z-index: 1040;
+    }
+
+        .sidebar.show {
+            margin-left: 0;
+        }
+
+    .main-content {
+        margin-left: 0;
+        padding-top: 4rem;
+    }
+
+    .hamburger {
+        display: block;
+    }
+}
+
