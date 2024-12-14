@@ -15,6 +15,7 @@ builder.Services.AddTransient<ITransactionService, TransactionService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IDashboardService, DashboardService>();
 builder.Services.AddTransient<IStudentService, StudentService>();
+builder.Services.AddTransient<IBookInstanceService, BookInstanceService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);

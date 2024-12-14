@@ -4,18 +4,19 @@ namespace ClientSideLibraryManagementSystem.Models
 {
     public class ReturnBookModel
     {
-        private readonly ITransactionService _transactionService;
-        public ReturnBookModel(ITransactionService transaction)
-        {
-            _transactionService = transaction;
-        }
+        //private readonly ITransactionService _transactionService;
+        //public ReturnBookModel(ITransactionService transaction)
+        //{
+        //    _transactionService = transaction;
+        //}
         private int studentId;
         public int TransactionId { get; set; }
-        public int StudentId { get { return studentId; } set {
-              var result = _transactionService.GetTransactionByIdAsync(TransactionId);
-            studentId = result.Result.StudentId;
-        } }
-
+        //public int StudentId { get { return studentId; } set {
+        //        var token = 
+        //      var result = _transactionService.GetTransactionByIdAsync(TransactionId);
+        //    studentId = result.Result.StudentId;
+        //} }
+        public int StudentId { get; set; }
         public int UserId { get; set; }
 
         public int BookId { get; set; }

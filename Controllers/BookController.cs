@@ -34,6 +34,18 @@ namespace ClientSideLibraryManagementSystem.Controllers
             }
             return View(bookmodel);
         }
+        [Route("Book/{bookId}")]
+        [HttpGet("{bookId}")]
+        public async Task<IActionResult> Id([FromRoute]int bookId)
+        {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                RedirectToAction("Login", "Auth");
+            }
+            var book = await _bookService.GetBookByIdAsync(bookId, token);
+            return Ok(book);
+        }
 
         public async Task<IActionResult> BookForm(int? id)
         {

@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Issue Book";
 }
-
+ 
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="d-flex align-items-center">
@@ -15,34 +15,48 @@
             <form asp-controller="Issuing" asp-action="Borrow" method="post">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label for="bookId" class="form-label">Book ID</label>
-                        <input type="text" class="form-control" id="bookId" name="BookId" required>
+                        <label for="BarCode" class="form-label">Bar Code</label>
+                        <input type="text" class="form-control" id="bookId" name="BarCode" required>
+                    </div>
+                    <input type="text" id="bookId" name="BookId" hidden required>
+                    <div class="col-md-6">
+                        <label for="Student Id" class="form-label">Student Id</label>
+                        <input type="text" class="form-control" id="studentId" name="StudentId" required>
+                    </div>
+
+                    <input type="text" class="form-control" id="userId" name="UserId" value="@(Model.BorrowData.UserId)" hidden required>
+
+                    <div class="col-md-6">
+                        <label for="Student Name" class="form-label">Student Name</label>
+                        <input type="text" class="form-control" id="studentName" name="Student Name" readonly required>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="userId" class="form-label">User ID</label>
-                        <input type="text" class="form-control" id="userId" name="UserId" required>
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" value="@(Model.BorrowData.Username)" readonly required>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="bookTitle" class="form-label">Book Title</label>
-                        <input type="text" class="form-control" id="bookTitle" name="BookTitle" required>
+                        <label for="Title" class="form-label">Book Title</label>
+                        <input type="text" class="form-control" id="title" name="Title" readonly required>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="isbn" class="form-label">ISBN</label>
-                        <input type="text" class="form-control" id="isbn" name="ISBN" required>
+                        <label for="TransactionType" class="form-label">Transaction Type</label>
+                        <input type="text" class="form-control" id="transactionType" name="TransactionType" value="Borrow" readonly required>
                     </div>
 
-                    <div class="col-12">
-                        <label for="date" class="form-label">Date</label>
+                    <div class="col-6">
+                        <label for="date" class="form-label">Issue Date</label>
                         <input type="date" class="form-control" id="date" name="Date" required>
                     </div>
-
+                    <div class="col-6">
+                        <label for="duedate" class="form-label">Due Date</label>
+                        <input type="date" class="form-control" id="dueDate"  readonly required>
+                    </div>
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary btn-submit">
-                            
-                            Borrow
+                        <button type="submit" class="btn btn-primary btn-submit">                            
+                            Issue Book
                         </button>
                     </div>
                 </div>
@@ -50,6 +64,60 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    $(document).ready(function () {
+        // Auto-fill for Book Details
+        $('#BookID').on('blur', function () {
+            const bookId = $(this).val();
+
+            if (bookId) {
+                $.ajax({
+                    url: '/ControllerName/GetBookDetails', // Update with your endpoint
+                    type: 'GET',
+                    data: { bookId: bookId },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#BookTitle').val(response.bookTitle);
+                            $('#ISBN').val(response.isbn);
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Error fetching book details');
+                    }
+                });
+            }
+        });
+
+        // Auto-fill for Student Details
+        $('#UserID').on('blur', function () {
+            const studentId = $(this).val();
+
+            if (studentId) {
+                $.ajax({
+                    url: '/ControllerName/GetStudentDetails', // Update with your endpoint
+                    type: 'GET',
+                    data: { studentId: studentId },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#UserName').val(response.name);
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Error fetching student details');
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
 
 <style>
     .btn-primary {
@@ -63,11 +131,12 @@
             border-color: #255D81;
         }
 
-        .btn-submit{
-            width:10rem;
-            height:2.8rem;
-            font-size:1.2rem;
-        }
+    .btn-submit {
+        width: 10rem;
+        height: 2.8rem;
+        font-size: 1.2rem;
+    }
+
     .form-control:focus {
         border-color: #255D81;
         box-shadow: 0 0 0 0.25rem rgba(37, 93, 129, 0.25);
@@ -81,5 +150,17 @@
     .card {
         border: 2px solid #255D81;
     }
-</style>
 
+    .form-control[readonly] {
+        background-color: #f8f9fa;
+        border-color: #ced4da;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+        .form-control[readonly]:focus {
+            outline: none;
+            box-shadow: none;
+            border-color: #ced4da;
+        }
+</style>

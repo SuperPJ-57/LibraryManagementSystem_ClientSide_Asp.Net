@@ -31,11 +31,30 @@ namespace ClientSideLibraryManagementSystem.Controllers
             {
                 transactionDetails = transactions
             };
-            return View("GetTransactions",transactionViewModel);
+            return View("GetTransactions", transactionViewModel);
         }
 
         //redirect to borrow form view
-        public IActionResult Borrow() => View("Borrow");
+        public IActionResult Borrow() { 
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            var borrowData = new BorrowData
+            {
+                UserId = Convert.ToInt32(_httpContextAccessor.HttpContext.Session.GetString("UserId")),
+                Username = _httpContextAccessor.HttpContext.Session.GetString("Username")
+
+            };
+            var borrowmodel = new TransactionViewModel
+            {
+                BorrowData = borrowData
+            };
+            return View("Borrow",borrowmodel);
+
+        }
 
         //redirect to return formview
         public IActionResult Return() => View("Return");
@@ -97,7 +116,7 @@ namespace ClientSideLibraryManagementSystem.Controllers
             //    return PartialView("_GetTransactionsPartial", transactions);
             //}
 
-            return View(transactions);
+            return View("GetTransactions",transactions);
         }
     }
 }

@@ -4,10 +4,10 @@ namespace ClientSideLibraryManagementSystem.Services
 {
     public interface ITransactionService
     {
-        Task<IEnumerable<TransactionDetails>> GetAllTransactionsAsync(string token);
-        Task<TransactionDetails> GetTransactionByIdAsync(int transactionId);
+        Task<IEnumerable<TransactionDetails>?> GetAllTransactionsAsync(string token);
+        Task<TransactionDetails> GetTransactionByIdAsync(int transactionId,string token);
         Task<bool> AddTransactionAsync(TransactionsEntity transaction,string token);
-        Task<TransactionsEntity> UpdateTransactionAsync(TransactionsEntity transaction);
-        Task<bool> DeleteTransactionAsync(int transactionId);
+        Task<bool> UpdateTransactionAsync(TransactionsEntity transaction,string token);
+        Task<bool> DeleteTransactionAsync(int transactionId, string token);
     }
 }

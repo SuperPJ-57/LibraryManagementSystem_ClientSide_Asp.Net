@@ -38,6 +38,8 @@ namespace ClientSideLibraryManagementSystem.Controllers
                     // Store the token in session
                     HttpContext.Session.SetString("JWToken", token);
                     HttpContext.Session.SetString("Username", userLoginModel.Username);
+                    var user = await _userService.GetUserByUsernameAsync(userLoginModel.Username);
+                    HttpContext.Session.SetString("UserId", user.UserId.ToString());
                     // Retrieve user details after authentication
                     //var userDetails = await _userService.GetUserByUsernameAsync(userLoginModel.Username);
 

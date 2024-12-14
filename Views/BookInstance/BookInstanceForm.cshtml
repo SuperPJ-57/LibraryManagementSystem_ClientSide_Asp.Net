@@ -1,0 +1,138 @@
+﻿@{
+    ViewData["Title"] = "Issue Book";
+}
+@model BookInstanceViewModel
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-book ms-2" style="font-size:2rem; color:#255D81; "></i>
+            <h1 class="h3 mb-0 ms-2">Add Book Copy</h1>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form asp-controller="BookInstance" asp-action="@(Model.BookInstanceDetail==null?"Add":"Update")" method="post">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="BarCode" class="form-label">Bar Code</label>
+                        <input type="text" class="form-control" id="barcode" value="@(Model.BookInstanceDetail!=null?@Model.BookInstanceDetail.BarCode:"")" asp-for="Book.BarCode" required readonly="@(Model.BookInstanceDetail!=null?true:false)">
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="Book Id" class="form-label">Book Id</label>
+                        <input type="text" class="form-control" id="bookId" value="@(Model.BookInstanceDetail!=null?@Model.BookInstanceDetail.BookId:"")" asp-for="Book.BookId" required>
+                    </div>
+
+                   
+
+                    <div class="col-md-6">
+                        <label for="Book Title" class="form-label">Book Title</label>
+                        <input type="text" class="form-control" value="@(Model.BookInstanceDetail!=null?@Model.BookInstanceDetail.Title:"")" id="Title" readonly>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="Status" class="form-label">Status</label>                        
+                        <select class="form-control" asp-for="Book.IsAvailable">                            
+                            <option  value="true" selected="@(Model.BookInstanceDetail!=null?(Model.BookInstanceDetail.IsAvailable):true)">Available</option>
+                            <option  value="false" selected="@(Model.BookInstanceDetail!=null?(!Model.BookInstanceDetail.IsAvailable):false)">Unavailable</option>
+                        </select>
+                    </div>
+
+                   
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            @(Model.BookInstanceDetail==null?"Add":"Update")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    document.getElementById('bookId').addEventListener('blur', async function () {
+        const bookId = this.value; // Get the value of the input field
+
+        if (bookId) {
+            try {
+                const response = await fetch(`/Book/${bookId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                }
+
+                const book = await response.json(); // Parse the JSON response
+
+                if (book) {
+                    document.getElementById('Title').value = book.title || 'Title not found';
+                } else {
+                    document.getElementById('Title').value = 'No book title found for the given ID.';
+                }
+            } catch (error) {
+                
+                document.getElementById('Title').value = 'Failed to retrieve book title. Please check the book ID and try again.';
+            }
+        }
+    });
+
+</script>
+
+
+
+
+
+
+
+<style>
+    .btn-primary {
+        background-color: #255D81;
+        border-color: #255D81;
+    }
+
+        .btn-primary:hover {
+            background-color: white;
+            color: #255D81;
+            border-color: #255D81;
+        }
+
+    .btn-submit {
+        width: 10rem;
+        height: 2.8rem;
+        font-size: 1.2rem;
+    }
+
+    .form-control:focus {
+        border-color: #255D81;
+        box-shadow: 0 0 0 0.25rem rgba(37, 93, 129, 0.25);
+    }
+
+    .card input, .card textarea {
+        border: 1px solid #255D81;
+    }
+
+
+    .card {
+        border: 2px solid #255D81;
+    }
+
+    .form-control[readonly] {
+        background-color: #f8f9fa;
+        border-color: #ced4da;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+        .form-control[readonly]:focus {
+            outline: none;
+            box-shadow: none;
+            border-color: #ced4da;
+        }
+</style>

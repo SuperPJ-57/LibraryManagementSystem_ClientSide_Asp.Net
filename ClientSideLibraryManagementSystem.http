@@ -1,0 +1,13 @@
+﻿@ClientSideLibraryManagementSystem_HostAddress = https://localhost:7189
+
+GET {{ClientSideLibraryManagementSystem_HostAddress}}/{BarCode}?barcode=7777777
+
+###
+
+
+
+
+
+GET {{ClientSideLibraryManagementSystem_HostAddress}}/{BarCode}?barcode=0
+
+###

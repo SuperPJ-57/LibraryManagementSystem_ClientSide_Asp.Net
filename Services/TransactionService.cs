@@ -30,23 +30,23 @@ namespace ClientSideLibraryManagementSystem.Services
             return response.IsSuccessStatusCode;
         }
 
-        public Task<bool> DeleteTransactionAsync(int transactionId)
+        public Task<bool> DeleteTransactionAsync(int transactionId,string token)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<TransactionDetails>> GetAllTransactionsAsync(string token)
+        public async Task<IEnumerable<TransactionDetails>?> GetAllTransactionsAsync(string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await _httpClient.GetAsync("https://localhost:7084/api/Transactions");
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadFromJsonAsync<IEnumerable<TransactionDetails>>();
+            var response = await _httpClient.GetFromJsonAsync<IEnumerable<TransactionDetails>>("https://localhost:7084/api/Transactions");
+            
+            return response;
+            //return await response.Content.ReadFromJsonAsync<IEnumerable<TransactionDetails>>();
         }
 
-        public Task<TransactionDetails> GetTransactionByIdAsync(int transactionId)
+        public Task<TransactionDetails> GetTransactionByIdAsync(int transactionId,string token)
         {
-           
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var result = _httpClient.GetFromJsonAsync<TransactionDetails>($"https://localhost:7084/api/Transactions/{transactionId}");
             if(result == null)
             {
@@ -55,7 +55,7 @@ namespace ClientSideLibraryManagementSystem.Services
             return result;
         }
 
-        public Task<TransactionsEntity> UpdateTransactionAsync(TransactionsEntity transaction)
+        public Task<bool> UpdateTransactionAsync(TransactionsEntity transaction,string token)
         {
             throw new NotImplementedException();
         }
