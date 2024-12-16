@@ -3,6 +3,7 @@
     public class TransactionDetails
     {
         public int TransactionId { get; set; }
+        public int BarCode { get; set; }
         public int StudentId { get; set; }
         public string Name { get; set; }
         public int BookId { get; set; }

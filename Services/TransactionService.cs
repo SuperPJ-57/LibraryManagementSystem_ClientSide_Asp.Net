@@ -25,7 +25,7 @@ namespace ClientSideLibraryManagementSystem.Services
             formData.Add(new StringContent(transaction.TransactionType), "TransactionType");
             formData.Add(new StringContent(transaction.Date.ToString()), "Date");
             var response = await _httpClient.PostAsync("https://localhost:7084/api/Transactions", formData);
-
+            
             // Return whether the API request was successful
             return response.IsSuccessStatusCode;
         }
@@ -35,13 +35,23 @@ namespace ClientSideLibraryManagementSystem.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<TransactionDetails>?> GetAllTransactionsAsync(string token)
+        public async Task<IEnumerable<TransactionDetails>?> GetAllTransactionsAsync(string token,string? query=null)
         {
+            // Set the authorization header with the provided token
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await _httpClient.GetFromJsonAsync<IEnumerable<TransactionDetails>>("https://localhost:7084/api/Transactions");
-            
+
+            // Build the request URL with query parameters (if any)
+            var requestUrl = "https://localhost:7084/api/Transactions";
+            if (!string.IsNullOrEmpty(query))
+            {
+                // Append the query parameter to the URL
+                requestUrl = $"{requestUrl}?query={Uri.EscapeDataString(query)}";
+            }
+
+            // Make the HTTP GET request and parse the response into the desired type
+            var response = await _httpClient.GetFromJsonAsync<IEnumerable<TransactionDetails>>(requestUrl);
+
             return response;
-            //return await response.Content.ReadFromJsonAsync<IEnumerable<TransactionDetails>>();
         }
 
         public Task<TransactionDetails> GetTransactionByIdAsync(int transactionId,string token)

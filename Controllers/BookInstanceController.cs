@@ -127,6 +127,7 @@ namespace ClientSideLibraryManagementSystem.Controllers
 
         }
 
+        [Route("BookInstance/Barcode/{BarCode}")]
         [HttpGet("{BarCode}")]
         public async Task<IActionResult> GetBookInstanceByBarcode([FromRoute]int BarCode)
         {
@@ -137,7 +138,7 @@ namespace ClientSideLibraryManagementSystem.Controllers
                 return RedirectToAction("Login", "Auth");
             }
             var book = await _bookInstanceService.GetBookInstanceByBarcodeAsync(BarCode, token);
-            return View("BookInstanceForm", book);
+            return Ok(book);
         }
 
     }

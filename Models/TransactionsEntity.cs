@@ -13,6 +13,6 @@
         public string TransactionType { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
         public DateTime DueDate { get; set; } 
-        public bool Status { get; set; }
+        public string? Status { get; set; }
     }
 }

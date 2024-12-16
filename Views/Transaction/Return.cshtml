@@ -1,49 +1,62 @@
 ﻿@{
     ViewData["Title"] = "Return Book";
 }
-
+@model TransactionViewModel
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="d-flex align-items-center">
-            <i class="bi bi-arrow-counterclockwise ms-2" style="font-size:2rem; color:#255D81;"></i> <!-- Downward arrow -->
+            <i class="fas fa-undo ms-2" style="font-size:2rem; color:#255D81; "></i>
+            
 
-            <h1 class="h3 mb-0">Return Book</h1>
+            <h1 class="h3 mb-0 ms-2">Return Book</h1>
         </div>
     </div>
 
     <div class="card">
         <div class="card-body">
-            <form asp-controller="Issuing" asp-action="Return" method="post">
+            <form asp-controller="Transaction" asp-action="RegisterReturn" method="post">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label for="bookId" class="form-label">Book ID</label>
-                        <input type="text" class="form-control" id="bookId" name="BookId" required>
+                        <label for="BarCode" class="form-label">Bar Code</label>
+                        <input type="text" class="form-control" id="barcode" asp-for="Transaction.BarCode" required>
+                    </div>
+                    <input type="text" id="bookId" asp-for="Transaction.BookId" required hidden>
+
+                    <div class="col-md-6">
+                        <label for="Student Id" class="form-label">Student Id</label>
+                        <input type="text" class="form-control" id="studentId" asp-for="Transaction.StudentId" required>
+                    </div>
+
+                    <input type="text" class="form-control" id="userId" asp-for="Transaction.UserId" value="@(Model.BorrowData.UserId)" hidden required>
+
+                    <div class="col-md-6">
+                        <label for="Student Name" class="form-label">Student Name</label>
+                        <input type="text" class="form-control" asp-for="TransactionDetails.Name" id="studentName" readonly>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="userId" class="form-label">User ID</label>
-                        <input type="text" class="form-control" id="userId" name="UserId" required>
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" value="@(Model.BorrowData.Username)" readonly>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="bookTitle" class="form-label">Book Title</label>
-                        <input type="text" class="form-control" id="bookTitle" name="BookTitle" required>
+                        <label for="Title" class="form-label">Book Title</label>
+                        <input type="text" class="form-control" id="title" asp-for="TransactionDetails.Title" readonly>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="isbn" class="form-label">ISBN</label>
-                        <input type="text" class="form-control" id="isbn" name="ISBN" required>
+                        <label for="TransactionType" class="form-label">Transaction Type</label>
+                        <input type="text" class="form-control" id="transactionType" asp-for="Transaction.TransactionType" value="Return" readonly required>
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-6">
                         <label for="date" class="form-label">Return Date</label>
-                        <input type="date" class="form-control" id="date" name="Date" required>
+                        <input type="date" class="form-control" id="date" asp-for="Transaction.Date" required>
                     </div>
-
+                    
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary btn-submit">
-                            
-                            Return
+                            Return Book
                         </button>
                     </div>
                 </div>
@@ -51,6 +64,77 @@
         </div>
     </div>
 </div>
+
+
+
+<script>
+
+    document.getElementById('barcode').addEventListener('blur', async function () {
+        const barcode = this.value;
+
+        if (barcode) {
+            try {
+                const response = await fetch(`/BookInstance/Barcode/${barcode}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                }
+
+                const book = await response.json(); // Parse the JSON response
+
+                if (book) {
+                    document.getElementById('title').value = book.title || 'Title not found';
+                    document.getElementById('bookId').value = book.bookId || 'BookId not found';
+                } else {
+                    document.getElementById('Title').value = 'No book title found for the given ID.';
+                }
+            } catch (error) {
+
+                document.getElementById('Title').value = 'Failed to retrieve book title. Please check the book ID and try again.';
+            }
+        }
+
+    });
+
+    document.getElementById('studentId').addEventListener('blur', async function () {
+        const studentId = this.value;
+
+        if (studentId) {
+            try {
+                const response = await fetch(`/Student/Id/${studentId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                }
+
+                const student = await response.json(); // Parse the JSON response
+
+                if (student) {
+                    document.getElementById('studentName').value = student.name || 'Name not found';
+
+                } else {
+                    document.getElementById('studentName').value = 'No student found for the given ID.';
+                }
+            } catch (error) {
+
+                document.getElementById('studentName').value = 'Failed to retrieve student Name.';
+            }
+        }
+    });
+   
+</script>
+
+
 
 <style>
     .btn-primary {
@@ -67,8 +151,9 @@
     .btn-submit {
         width: 10rem;
         height: 2.8rem;
-        font-size:1.2rem;
+        font-size: 1.2rem;
     }
+
     .form-control:focus {
         border-color: #255D81;
         box-shadow: 0 0 0 0.25rem rgba(37, 93, 129, 0.25);
@@ -82,5 +167,17 @@
     .card {
         border: 2px solid #255D81;
     }
-</style>
 
+    .form-control[readonly] {
+        background-color: #f8f9fa;
+        border-color: #ced4da;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+        .form-control[readonly]:focus {
+            outline: none;
+            box-shadow: none;
+            border-color: #ced4da;
+        }
+</style>

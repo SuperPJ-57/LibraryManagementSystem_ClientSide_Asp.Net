@@ -34,7 +34,7 @@ namespace ClientSideLibraryManagementSystem.Controllers
             }
             return View(bookmodel);
         }
-        [Route("Book/{bookId}")]
+        [Route("Book/Id/{bookId}")]
         [HttpGet("{bookId}")]
         public async Task<IActionResult> Id([FromRoute]int bookId)
         {

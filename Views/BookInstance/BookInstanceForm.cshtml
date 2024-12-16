@@ -31,6 +31,9 @@
                         <input type="text" class="form-control" value="@(Model.BookInstanceDetail!=null?@Model.BookInstanceDetail.Title:"")" id="Title" readonly>
                     </div>
 
+                   
+                  
+
                     <div class="col-md-6">
                         <label for="Status" class="form-label">Status</label>                        
                         <select class="form-control" asp-for="Book.IsAvailable">                            
@@ -58,7 +61,7 @@
 
         if (bookId) {
             try {
-                const response = await fetch(`/Book/${bookId}`, {
+                const response = await fetch(`/Book/Id/${bookId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -81,6 +84,7 @@
                 document.getElementById('Title').value = 'Failed to retrieve book title. Please check the book ID and try again.';
             }
         }
+
     });
 
 </script>

@@ -1,15 +1,15 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
 }
-@model DashboardData
+@model DashboardViewModel
 <link href="/css/site.css" rel="stylesheet" />
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3">Dashboard</h1>
         <div class="user-info d-flex align-items-center">
             <img src="/resources/user.png" alt="User Icon" style="width: 24px; height: 24px; margin-right: 8px;">            
-            <span class="fw-bold">@Model.Username</span>
-            <span class="text-muted ms-2">@Model.Role</span>
+            <span class="fw-bold">@(Model.DashboardData.Username)</span>
+            <span class="text-muted ms-2">@Model.DashboardData.Role</span>
         </div>
     </div>
 
@@ -29,8 +29,11 @@
                 <div class="col-sm-4 mb-4">
                     <div class="card bg-light">
                         <div class="card-body text-center">
+                            @*
                             <img src="" alt="Total User Base Icon" class="mb-2" style="width: 48px; height: 48px;">
-                            <h2 class="card-title">0150</h2>
+                            *@
+                            <i class="fas fa-users" style="font-size:3rem;"></i>
+                            <h2 class="card-title">@(Model.DashboardData.TotalUserBase)</h2>
                             <p class="card-text">Total User Base</p>
                         </div>
                     </div>
@@ -38,8 +41,12 @@
                 <div class="col-sm-4 mb-4">
                     <div class="card bg-light">
                         <div class="card-body text-center">
+                            @*
                             <img src="" alt="Total Book Count Icon" class="mb-2" style="width: 48px; height: 48px;">
-                            <h2 class="card-title">01500</h2>
+                            *@
+                            <i class="fas fa-book" style="font-size:3rem;"></i>
+
+                            <h2 class="card-title">@(Model.DashboardData.TotalBooks)</h2>
                             <p class="card-text">Total Book Count</p>
                         </div>
                     </div>
@@ -47,28 +54,37 @@
                 <div class="col-sm-4 mb-4">
                     <div class="card bg-light">
                         <div class="card-body text-center">
+                            @*
                             <img src="" alt="Branch Count Icon" class="mb-2" style="width: 48px; height: 48px;">
-                            <h2 class="card-title">0010</h2>
+                            *@
+                            <span class="material-icons" style="font-size:3rem;">account_tree</span>
+                            <h2 class="card-title">@(Model.DashboardData.TotalFaculty)</h2>
                             <p class="card-text">Branch Count</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card">
+            <div class="card" style="min-height:185px;">
                 <div class="card-body">
                     <h5 class="card-title">Overdue Borrowers</h5>
                     <ul class="list-group">
-                        @for (int i = 0; i < 5; i++)
+                        @foreach (var borrower in Model.OverDueBorrowers)
                         {
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <img src="" alt="User Icon" style="width: 24px; height: 24px; margin-right: 8px;">
-                                    <span>ABC XYZ</span>
+                                    <img src="~/resources/user.png" alt="User Icon" style="width: 24px; height: 24px; margin-right: 8px;">
+                                    <span>@borrower.BorrowerName</span>
                                 </div>
-                                <span>Borrowed ID: 10</span>
-                                <button class="btn btn-sm btn-outline-primary">
-                                    <img src="" alt="Refresh Icon" style="width: 16px; height: 16px;">
-                                </button>
+                                <span>Borrowed ID: @borrower.BorrowerId</span>
+                                
+                                    <form asp-action="Return" asp-controller="Transaction" method="Post">
+                                    <input type="text" name="Tid" value="@borrower.BorrowId" required hidden />
+                                        <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-undo"></i>
+                                        </button>
+                                    </form>                               
+                               
+                                
                             </li>
                         }
                     </ul>
@@ -88,8 +104,8 @@
                 data: {
                     labels: ['Total Borrowed Books', 'Total Returned Books'],
                     datasets: [{
-                        data: [300, 100],
-                        backgroundColor: ['#36A2EB', '#FF6384']
+                        data: [@(Model.DashboardData.TotalBorrowedBooks), @(Model.DashboardData.TotalReturnedBooks)],
+                        backgroundColor: ['#36A2EB', '#255D81']
                     }]
                 },
                 options: {

@@ -22,10 +22,7 @@ namespace ClientSideLibraryManagementSystem.Controllers
             {
                 return RedirectToAction("Login", "Auth");
             }
-            //if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")  // Check if it's an AJAX request
-            //{
-            //    return PartialView("_TransactionPartial");
-            //}
+
             var transactions = _transactionService.GetAllTransactionsAsync(token).Result;
             var transactionViewModel = new TransactionViewModel
             {
@@ -34,8 +31,23 @@ namespace ClientSideLibraryManagementSystem.Controllers
             return View("GetTransactions", transactionViewModel);
         }
 
+        [Route("Transaction/All/{query}")]
+        public async Task<IEnumerable<TransactionDetails>> SearchTransaction([FromRoute]string? query)
+        {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return null;
+            }
+            var transactions = await _transactionService.GetAllTransactionsAsync(token,query);
+            return transactions;
+
+        }
+
         //redirect to borrow form view
-        public IActionResult Borrow() { 
+        [Route("Transaction/Borrow")]
+        public IActionResult Borrow() {
             var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
 
             if (string.IsNullOrEmpty(token))
@@ -52,17 +64,66 @@ namespace ClientSideLibraryManagementSystem.Controllers
             {
                 BorrowData = borrowData
             };
-            return View("Borrow",borrowmodel);
+            return View("Borrow", borrowmodel);
 
         }
 
         //redirect to return formview
-        public IActionResult Return() => View("Return");
+        [Route("Transaction/Id/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetTransactionById([FromRoute] int id)
+        {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            var transaction = await _transactionService.GetTransactionByIdAsync(id, token);
+            return Ok(transaction);
+        }
+
+        [Route("Transaction/Return")]
+        public IActionResult Return(int? Tid)
+        {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            var borrowData = new BorrowData
+            {
+                UserId = Convert.ToInt32(_httpContextAccessor.HttpContext.Session.GetString("UserId")),
+                Username = _httpContextAccessor.HttpContext.Session.GetString("Username")
+
+            };
+            AddTransactionModel model = new AddTransactionModel();
+            TransactionDetails transactionDetails = new TransactionDetails();
+            var returnmodel = new TransactionViewModel
+            {
+                BorrowData = borrowData
+            };
+            if (Tid != null)
+            {
+                
+                var transaction = _transactionService.GetTransactionByIdAsync(Tid.Value, token).Result;
+                model.BookId = transaction.BookId;
+                model.StudentId = transaction.StudentId;
+                model.BarCode = transaction.BarCode;
+                transactionDetails.Name = transaction.Name;
+                transactionDetails.Title = transaction.Title;
+                returnmodel.Transaction = model;
+                returnmodel.TransactionDetails = transactionDetails;
+            }
+            
+            return View("Return", returnmodel);
+        }
         
 
-        //[Route("Transaction/TransactionRegister")]
+        [Route("Transaction/Register")]
         [HttpPost]
-        public async Task<IActionResult> AddTransaction(AddTransactionModel model)
+        public async Task<IActionResult> AddTransaction(TransactionViewModel model)
         {
             
             var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
@@ -71,52 +132,79 @@ namespace ClientSideLibraryManagementSystem.Controllers
             {
                 return RedirectToAction("Login", "Auth");
             }
-            if (ModelState.IsValid == false)
-            {
-                return RedirectToAction("Index");
-            }
+            
             var transac = new TransactionsEntity
             {
-                StudentId = model.StudentId,
-                UserId = model.UserId,
-                BookId = model.BookId,
-                BarCode = model.BarCode,
-                TransactionType = model.TransactionType,
-                Date = model.Date
+                StudentId = model.Transaction.StudentId,
+                UserId = model.Transaction.UserId,
+                BookId = model.Transaction.BookId,
+                BarCode = model.Transaction.BarCode,
+                TransactionType = model.Transaction.TransactionType,
+                Date = model.Transaction.Date
             };
             var result = await _transactionService.AddTransactionAsync(transac, token);
             if (!result)
             {
                 ModelState.AddModelError("", "Error adding transaction.");
-                return RedirectToAction("Index");
+                return RedirectToAction("Borrow");
             }
-            return RedirectToAction("GetTransactions");
+            return RedirectToAction("Display");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetTransactions()
+        [Route("Transaction/RegisterReturn")]
+        [HttpPost]
+        public async Task<IActionResult> AddBookReturn(TransactionViewModel model)
         {
+
             var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
 
             if (string.IsNullOrEmpty(token))
             {
                 return RedirectToAction("Login", "Auth");
             }
-            var response = await _transactionService.GetAllTransactionsAsync(token);
-            //if(type != null)
-            //{
-            //    response = response.Where(x => x.TransactionType == type).ToList();
-            //}
-            var transactions = new TransactionViewModel
-            {
-                transactionDetails = response
-            };
-            //if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")  // Check if it's an AJAX request
-            //{
-            //    return PartialView("_GetTransactionsPartial", transactions);
-            //}
 
-            return View("GetTransactions",transactions);
+            var transac = new TransactionsEntity
+            {
+                StudentId = model.Transaction.StudentId,
+                UserId = model.Transaction.UserId,
+                BookId = model.Transaction.BookId,
+                BarCode = model.Transaction.BarCode,
+                TransactionType = model.Transaction.TransactionType,
+                Date = model.Transaction.Date
+            };
+            var result = await _transactionService.AddTransactionAsync(transac, token);
+            if (!result)
+            {
+                ModelState.AddModelError("", "Error adding transaction.");
+                return RedirectToAction("Return");
+            }
+            return RedirectToAction("Display");
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetTransactions()
+        //{
+        //    var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+
+        //    if (string.IsNullOrEmpty(token))
+        //    {
+        //        return RedirectToAction("Login", "Auth");
+        //    }
+        //    var response = await _transactionService.GetAllTransactionsAsync(token);
+        //    //if(type != null)
+        //    //{
+        //    //    response = response.Where(x => x.TransactionType == type).ToList();
+        //    //}
+        //    var transactions = new TransactionViewModel
+        //    {
+        //        transactionDetails = response
+        //    };
+        //    //if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")  // Check if it's an AJAX request
+        //    //{
+        //    //    return PartialView("_GetTransactionsPartial", transactions);
+        //    //}
+
+        //    return View("GetTransactions",transactions);
+        //}
     }
 }

@@ -27,11 +27,13 @@ namespace ClientSideLibraryManagementSystem.Controllers
             DashboardData data = _dashboardService.GetDashboardDataAsync(username).Result;
             data.Username = username;
 
-            //if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")  // Check if it's an AJAX request
-            //{
-            //    return View("Index", data);
-            //}
-            return View(data);  // Return only the partial view
+            var overdueBorrowers = _dashboardService.GetOverdueBorrowersAsync().Result;
+            var dashboardViewModel = new DashboardViewModel
+            {
+                DashboardData = data,
+                OverDueBorrowers = overdueBorrowers
+            };
+            return View(dashboardViewModel);  
         }
     }
 }

@@ -59,6 +59,19 @@ namespace ClientSideLibraryManagementSystem.Controllers
 
         }
 
+        [Route("Student/Id/{studentId}")]
+        [HttpGet("{studentId}")]
+        public async Task<IActionResult> Id([FromRoute] int studentId)
+        {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                RedirectToAction("Login", "Auth");
+            }
+            var student = await _studentService.GetStudentByIdAsync(studentId, token);
+            return Ok(student);
+        }
+
         [Route("Student/Add")]
         [HttpPost]
         public async Task<IActionResult> AddStudent(StudentViewModel model)

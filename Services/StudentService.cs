@@ -31,10 +31,9 @@ namespace ClientSideLibraryManagementSystem.Services
         public async Task<IEnumerable<StudentsEntity>> GetAllStudentsAsync(string token)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await _httpClient.GetAsync("https://localhost:7084/api/Students");
-            response.EnsureSuccessStatusCode();
+            var response = await _httpClient.GetFromJsonAsync<IEnumerable<StudentsEntity>>("https://localhost:7084/api/Students");
 
-            return await response.Content.ReadFromJsonAsync<IEnumerable<StudentsEntity>>();
+            return response;
         }
 
 
