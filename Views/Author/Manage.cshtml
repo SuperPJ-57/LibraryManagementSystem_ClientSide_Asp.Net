@@ -14,7 +14,7 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover" id="authortable">
                     <thead class="table-light">
                         <tr>
                             <th>Author ID</th>
@@ -53,22 +53,61 @@
                 </table>
             </div>
 
-            <nav class="mt-4">
-                <ul class="pagination justify-content-end">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
         </div>
     </div>
 </div>
+
+@section scripts {
+   
+
+    <script>
+        $(document).ready(function () {
+            $('#authortable').DataTable({
+                paging: true,        // Enable pagination
+                searching: true,     // Enable search functionality
+                ordering: true,      // Enable column sorting
+                lengthMenu: [5, 10, 25, 50], // Rows per page options
+                pageLength: 10,       // Default rows per page
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search authors...",
+                    paginate: {
+                        previous: "Previous",
+                        next: "Next"
+                    }
+                },
+                // Align DataTables with Bootstrap layout
+                dom: '<"row"<"col-md-6"l><"col-md-6"f>>' +
+                    '<"row"<"col-12"tr>>' +
+                    '<"row"<"col-md-5"i><"col-md-7"p>>'
+            });
+
+            
+                // Initialize DataTable
+                var table = $('#author_table').DataTable({
+                    "initComplete": function () {
+                        $('#authortable_wrapper .row').first().addClass('align-items-center'); // Align elements vertically
+
+                        // Move search bar and table length to appropriate positions
+                        $('#authortable_filter').addClass('col-md-4').appendTo('#authortable_wrapper .row:first');
+                        $('#authortable_length').addClass('col-md-3').insertAfter('#authortable_filter');
+
+                        // Add "Add Author" button dynamically
+                        $('#authortable_wrapper .row:first').append(`
+                            <div class="col-md-5 text-end">
+                                <button type="button" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Add Author
+                                </button>
+                            </div>
+                        `);
+                    }
+                });
+           
+
+        });
+    </script>
+}
+
 
 <style>
     .btn-warning {
@@ -93,13 +132,83 @@
             border-color: #dc3545;
         }
 
-    .page-link {
-        color: #255D81;
-    }
+    
 
     .page-item.active .page-link {
         background-color: #255D81;
         border-color: #255D81;
     }
+    .page-link {
+        color: #255D81;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem 0.75rem;
+    margin: 0 2px;
+}
+
+.page-item:first-child .page-link,
+.page-item:last-child .page-link {
+    background-color: #f8f9fa;
+}
+
+.page-item.active .page-link {
+    background-color: #255D81;
+    border-color: #255D81;
+    color: white;
+}
+
+.page-item .page-link:hover {
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+    color: #255D81;
+}
+
+.page-item.active .page-link:hover {
+    background-color: #255D81;
+    color: white;
+}
+
+.dataTables_paginate {
+    padding-top: 0.5em;
+}
+
+    .dataTables_filter {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+        .dataTables_filter input {
+            width: 300px !important;
+            padding: 8px 40px 8px 12px;
+            border: 2px solid #255D81;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+            .dataTables_filter input:focus {
+                border-color: #255D81;
+            }
+
+        .dataTables_filter label {
+            position: relative;
+        }
+
+            .dataTables_filter label::after {
+                content: "";
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 16px;
+                height: 16px;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23255D81" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>') no-repeat center center;
+                pointer-events: none;
+            }
+
+        .dataTables_filter input::placeholder {
+            color: #6c757d;
+        }
 </style>
 

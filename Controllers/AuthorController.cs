@@ -37,7 +37,21 @@ namespace ClientSideLibraryManagementSystem.Controllers
             }
             return View(authormodel);
         }
-       
+
+
+        //Get all authors
+        public async Task<IActionResult> GetAllAuthors()
+        {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            var authors = await _authorService.GetAllAuthorsAsync(token);
+            return Json(authors);
+        }
+
+
         public async Task<IActionResult> AuthorForm(int? id)
         {
             var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
