@@ -10,10 +10,19 @@
             <h1 class="h3 mb-0">Author Details</h1>
         </div>
     </div>
-
+    
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
+                <div class="col-md-3 ms-3" id="authorAdd">
+                    <form asp-action="AuthorForm" asp-controller="Author" style="text-align:right;">
+                        <button class="btn btn-outline-secondary" type="submit" id="btnAuthorAdd">
+                            Add Author
+                            <i class="bi bi-plus"></i>
+                            </button>
+                    </form>
+                </div>
+                
                 <table class="table table-hover" id="authortable">
                     <thead class="table-light">
                         <tr>
@@ -82,17 +91,38 @@
                     '<"row"<"col-md-5"i><"col-md-7"p>>'
             });
 
-            
-                // Initialize DataTable
+            //changing position of search button and page length
+            let searchdiv = document.getElementById('authortable_wrapper')
+            console.log(searchdiv)
+            let firstrow = (searchdiv.querySelectorAll('div'))[0];
+            let rows = firstrow.querySelectorAll('.col-md-6')
+            firstrow.removeChild(rows[0])
+            firstrow.appendChild(rows[0])           
+            rows[0].classList.remove('col-md-6')
+            rows[0].classList.add('col-md-3')
+            rows[1].classList.remove('col-md-6')
+            rows[1].classList.add('col-md-5')
+
+            //adding add author at the end of the row
+                /*< button class="btn btn-outline-secondary" type = "button" id = "clearFilters" >
+                    <i class="bi bi-eraser-fill" > </i>
+            Clear Filters
+                < /button>*/
+
+            let auhorAddBtn = document.getElementById('authorAdd')
+            console.log(auhorAddBtn)
+            auhorAddBtn.remove()
+            firstrow.appendChild(auhorAddBtn)
+            /*    Initialize DataTable
                 var table = $('#author_table').DataTable({
                     "initComplete": function () {
-                        $('#authortable_wrapper .row').first().addClass('align-items-center'); // Align elements vertically
+                        $('#authortable_wrapper .row').first().addClass('align-items-center'); Align elements vertically
 
-                        // Move search bar and table length to appropriate positions
+                        Move search bar and table length to appropriate positions
                         $('#authortable_filter').addClass('col-md-4').appendTo('#authortable_wrapper .row:first');
                         $('#authortable_length').addClass('col-md-3').insertAfter('#authortable_filter');
 
-                        // Add "Add Author" button dynamically
+                        Add "Add Author" button dynamically
                         $('#authortable_wrapper .row:first').append(`
                             <div class="col-md-5 text-end">
                                 <button type="button" class="btn btn-primary">
@@ -101,7 +131,7 @@
                             </div>
                         `);
                     }
-                });
+                }); */
            
 
         });
@@ -168,13 +198,33 @@
     color: white;
 }
 
+
+/*add button*/
+    .btn-outline-secondary:hover {
+        color: #255D81;
+        border: 2px solid #255D81;
+        background:white;
+        box-shadow:0 0 0 0.25rem rgba(37, 93, 129, 0.25)
+    }
+
+        .btn-outline-secondary {
+            background-color: #255D81;
+            color: white;
+        }
+
 .dataTables_paginate {
     padding-top: 0.5em;
 }
 
+
+
+    div.dataTables_wrapper div.dataTables_filter{
+        text-align:left;
+    }
     .dataTables_filter {
         position: relative;
         margin-bottom: 1rem;
+        
     }
 
         .dataTables_filter input {

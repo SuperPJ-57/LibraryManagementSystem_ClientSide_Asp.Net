@@ -82,6 +82,15 @@
 
 
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            let searchdiv = document.getElementById('authortable_wrapper')
+            let firstrow = (document.getElementByTagName('div'))[0];
+            let rows = document.querySelectorAll('div')
+            firstrow.removeChild(rows[0])
+            firstrow.appendChild(rows[0])
+
+
+        })
     </script>
 }
 
