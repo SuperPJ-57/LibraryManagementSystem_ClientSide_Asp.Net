@@ -13,6 +13,14 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
+                <div class="col-md-4" id="bookInstanceAdd">
+                    <form asp-action="BookInstanceForm" asp-controller="BookInstance" style="text-align:right;">
+                        <button class="btn btn-outline-secondary me-2" type="submit" id="btnBookInstanceAdd" style="width:180px;">
+                            Add Book Copy
+                            <i class="fas fa-plus ms-2"></i>
+                        </button>
+                    </form>
+                </div>
                 <table class="table table-hover" id="bookInstanceTable">
                     <thead class="table-light">
                         <tr>
@@ -85,7 +93,24 @@
                     '<"row"<"col-12"tr>>' +
                     '<"row"<"col-md-5"i><"col-md-7"p>>'
             });
+            //changing position of search button and page length
+            let searchdiv = document.getElementById('bookInstanceTable_wrapper')
+            console.log(searchdiv)
+            let firstrow = (searchdiv.querySelectorAll('div'))[0];
+            let rows = firstrow.querySelectorAll('.col-md-6')
+            firstrow.removeChild(rows[0])
+            firstrow.appendChild(rows[0])
+            rows[0].classList.remove('col-md-6')
+            rows[0].classList.add('col-md-3')
+            rows[1].classList.remove('col-md-6')
+            rows[1].classList.add('col-md-5')
 
+
+
+            let bookInstanceAddBtn = document.getElementById('bookInstanceAdd')
+            console.log(bookInstanceAddBtn)
+            bookInstanceAddBtn.remove()
+            firstrow.appendChild(bookInstanceAddBtn)
 
         });
     </script>
@@ -127,6 +152,19 @@
 
     /*new for datatable*/
 
+    /*add button*/
+    .btn-outline-secondary:hover {
+        color: #255D81;
+        border: 2px solid #255D81;
+        background: white;
+        box-shadow: 0 0 0 0.25rem rgba(37, 93, 129, 0.25)
+    }
+
+    .btn-outline-secondary {
+        background-color: #255D81;
+        color: white;
+    }
+
     .page-item.active .page-link {
         background-color: #255D81;
         border-color: #255D81;
@@ -166,6 +204,9 @@
         padding-top: 0.5em;
     }
 
+    div.dataTables_wrapper div.dataTables_filter {
+        text-align: left;
+    }
     .dataTables_filter {
         position: relative;
         margin-bottom: 1rem;

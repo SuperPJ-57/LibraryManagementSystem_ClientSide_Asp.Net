@@ -13,6 +13,14 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
+                <div class="col-md-4 " id="bookAdd">
+                    <form asp-action="BookForm" asp-controller="Book" style="text-align:right;">
+                        <button class="btn btn-outline-secondary me-2" type="submit" id="btnBookAdd" style="width:180px;">
+                            Add Book
+                            <i class="fa fa-plus ms-2"></i>
+                        </button>
+                    </form>
+                </div>
                 <table class="table table-hover" id="booktable">
                     <thead class="table-light">
                         <tr>
@@ -86,8 +94,25 @@
                 dom: '<"row"<"col-md-6"l><"col-md-6"f>>' +
                     '<"row"<"col-12"tr>>' +
                     '<"row"<"col-md-5"i><"col-md-7"p>>'
-            });           
+            });
+            //changing position of search button and page length
+            let searchdiv = document.getElementById('booktable_wrapper')
+            console.log(searchdiv)
+            let firstrow = (searchdiv.querySelectorAll('div'))[0];
+            let rows = firstrow.querySelectorAll('.col-md-6')
+            firstrow.removeChild(rows[0])
+            firstrow.appendChild(rows[0])
+            rows[0].classList.remove('col-md-6')
+            rows[0].classList.add('col-md-3')
+            rows[1].classList.remove('col-md-6')
+            rows[1].classList.add('col-md-5')
 
+
+
+            let bookAddBtn = document.getElementById('bookAdd')
+            console.log(bookAddBtn)
+            bookAddBtn.remove()
+            firstrow.appendChild(bookAddBtn)
 
         });
     </script>
@@ -116,6 +141,19 @@
         }
 
    /*new for datatable*/
+
+    /*add button*/
+    .btn-outline-secondary:hover {
+        color: #255D81;
+        border: 2px solid #255D81;
+        background: white;
+        box-shadow: 0 0 0 0.25rem rgba(37, 93, 129, 0.25)
+    }
+
+    .btn-outline-secondary {
+        background-color: #255D81;
+        color: white;
+    }
 
     .page-item.active .page-link {
         background-color: #255D81;
@@ -156,6 +194,9 @@
         padding-top: 0.5em;
     }
 
+    div.dataTables_wrapper div.dataTables_filter {
+        text-align: left;
+    }
     .dataTables_filter {
         position: relative;
         margin-bottom: 1rem;

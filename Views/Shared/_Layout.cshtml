@@ -33,7 +33,34 @@
             top: 0;
             transition: all 0.3s;
         }
-        
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary-color);
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: all 0.3s;
+            overflow-y: auto; /* Enable scrolling */
+            max-height: 100vh; /* Limit height to viewport */
+            scrollbar-width: thin; /* Optional: thinner scrollbar */
+        }
+
+            /* Optional for customizing the scrollbar */
+            .sidebar::-webkit-scrollbar {
+                width: 5px;
+            }
+
+            .sidebar::-webkit-scrollbar-thumb {
+                background-color: rgba(255, 255, 255, 0.2);
+                border-radius: 4px;
+            }
+
+                .sidebar::-webkit-scrollbar-thumb:hover {
+                    background-color: rgba(255, 255, 255, 0.4);
+                }
+
         .sidebar-collapsed {
             margin-left: calc(var(--sidebar-width) * -1);
         }
@@ -188,7 +215,7 @@
                 <i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <div class="collapse @(ViewContext.RouteData.Values["controller"]?.ToString() == "Author" ? "show" : "") submenu" id="authorSubmenu">
-                <a asp-controller="Author" asp-action="AuthorForm" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Add" ? "active" : "")">Add/Edit Author</a>
+                <a asp-controller="Author" asp-action="AuthorForm" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Add" ? "active" : "")">Author Form</a>
                 <a asp-controller="Author" asp-action="Manage" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Manage" ? "active" : "")">Manage Authors</a>
             </div>
 
@@ -198,7 +225,7 @@
                 <i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <div class="collapse @(ViewContext.RouteData.Values["controller"]?.ToString() == "Book" ? "show" : "") submenu" id="booksSubmenu">
-                <a asp-controller="Book" asp-action="BookForm" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "AddBookForm" ? "active" : "")">Add/Edit Book</a>
+                <a asp-controller="Book" asp-action="BookForm" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "AddBookForm" ? "active" : "")">Book Form</a>
                 <a asp-controller="Book" asp-action="Manage" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Manage" ? "active" : "")">Manage Books</a>
             </div>
 
@@ -209,7 +236,7 @@
                 <i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <div class="collapse @(ViewContext.RouteData.Values["controller"]?.ToString() == "BookInstance" ? "show" : "") submenu" id="bookcopiesSubmenu">
-                <a asp-controller="BookInstance" asp-action="BookInstanceForm" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "BookInstanceForm" ? "active" : "")">Add/Edit Book Copy</a>
+                <a asp-controller="BookInstance" asp-action="BookInstanceForm" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "BookInstanceForm" ? "active" : "")">Book Copy Form</a>
                 <a asp-controller="BookInstance" asp-action="Manage" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Manage" ? "active" : "")">Manage Book Instance</a>
             </div>
 
@@ -221,7 +248,7 @@
                 <i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <div class="collapse @(ViewContext.RouteData.Values["controller"]?.ToString() == "Student" ? "show" : "") submenu" id="studentsSubmenu">
-                <a asp-controller="Student" asp-action="StudentForm" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "RegisterStudent" ? "active" : "")">Add/Edit Student</a>
+                <a asp-controller="Student" asp-action="StudentForm" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "RegisterStudent" ? "active" : "")">Student Form</a>
                 <a asp-controller="Student" asp-action="Manage" class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Manage" ? "active" : "")">Manage Students</a>
             </div>
 
