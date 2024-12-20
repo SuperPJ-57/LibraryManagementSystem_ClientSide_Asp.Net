@@ -40,14 +40,16 @@ namespace ClientSideLibraryManagementSystem.Controllers
 
 
         //Get all authors
-        public async Task<IActionResult> GetAllAuthors()
+        [Route("Author/AllAuthors")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllAuthors([FromQuery]string? query=null)
         {
             var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
             if (string.IsNullOrEmpty(token))
             {
                 return RedirectToAction("Login", "Auth");
             }
-            var authors = await _authorService.GetAllAuthorsAsync(token);
+            var authors = await _authorService.GetAllAuthorsAsync(token,query);
             return Json(authors);
         }
 

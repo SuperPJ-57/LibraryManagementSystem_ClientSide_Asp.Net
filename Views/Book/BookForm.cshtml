@@ -30,11 +30,13 @@
                         <input type="text" class="form-control" id="genre"  value="@(Model.Book!=null?@Model.Book.Genre:"")" asp-for="Book.Genre" required>
                     </div>
 
-                    <div class="col-md-6">
-                        <label for="authorId" class="form-label">Author ID</label>
-                        <input type="text" class="form-control" id="authorId" value="@(Model.Book!=null?@Model.Book.AuthorId:"")" asp-for="Book.AuthorId" required>
+                    <div class="col-md-6" style="position:relative;">
+                        <label for="authorName" class="form-label">Author Name</label>
+                        <input type="text" class="form-control" id="authorName" value="@(Model.Book!=null?@Model.Book.AuthorName:"")" required>
+                        <div id="suggestions" ></div>
                     </div>
 
+                    <input type="text" class="form-control" id="authorId" value="@(Model.Book!=null?@Model.Book.AuthorId:"")" asp-for="Book.AuthorId" required hidden>
                    
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">
@@ -47,7 +49,84 @@
     </div>
 </div>
 
+@section scripts{
+
+       <script>
+        $(document).ready(function () {
+            $('#authorName').on('input', function () {
+                const query = encodeURIComponent($(this).val());
+                console.log(query)
+
+                if (query.length > 0) {
+                    $.ajax({
+                        url: `https://localhost:7189/Author/AllAuthors/`, // Replace with your API endpoint
+                        type: 'GET',
+                        data: { query: query },
+                        success: function (data) {
+                            console.log(data[0]);
+                            $('#suggestions').empty();
+                            if (data.length > 0) {
+                                data.forEach(item => {
+                                    console.log(item.name)
+                                    $('#suggestions').append(`<div id="${item.authorId}">${item.name}</div>`);
+                                });
+                            } else {
+                                $('#suggestions').append('<div>No suggestions found</div>');
+                            }
+                        },
+                        error: function () {
+                            $('#suggestions').empty().append('<div>Error fetching suggestions</div>');
+                        }
+                    });
+                } else {
+                    $('#suggestions').empty();
+                }
+            });
+
+            // Handle click on suggestion
+            $('#suggestions').on('click', 'div', function () {
+                let id = $(this).attr('id')
+                $('#authorName').val($(this).text());
+                $('#authorId').val(id)
+                console.log('Selected:', $(this).attr('id'));
+                $('#suggestions').empty();
+            });
+
+            // Close suggestions when clicking outside
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('#authorName, #suggestions').length) {
+                    $('#suggestions').empty();
+                }
+            });
+            
+        });
+    </script>
+
+
+}
+
+
 <style>
+    #suggestions {
+    position: absolute;
+    top: 100%;
+    z-index: 1000;
+    border-radius: 4px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 10.2);
+    width:97%;
+    background:white;
+}
+    
+
+        #suggestions div {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+            #suggestions div:hover {
+                background-color: #255D81;
+                color:white;
+            }
     .btn-primary {
         background-color: #255D81;
         border-color: #255D81;

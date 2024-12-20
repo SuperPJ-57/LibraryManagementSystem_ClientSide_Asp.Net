@@ -29,13 +29,18 @@ namespace ClientSideLibraryManagementSystem.Services
 
         
 
-        public async Task<IEnumerable<AuthorsEntity>> GetAllAuthorsAsync(string token)
+        public async Task<IEnumerable<AuthorsEntity>?> GetAllAuthorsAsync(string token, string? query = null)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await _httpClient.GetAsync("https://localhost:7084/api/Authors");
-            response.EnsureSuccessStatusCode();
+            var requestUrl = "https://localhost:7084/api/Authors";
+            if (!string.IsNullOrEmpty(query))
+            {
+                // Append the query parameter to the URL
+                requestUrl = $"{requestUrl}?query={Uri.EscapeDataString(query)}";
+            }
+            var response = await _httpClient.GetFromJsonAsync<IEnumerable<AuthorsEntity>>(requestUrl);           
 
-            return await response.Content.ReadFromJsonAsync<IEnumerable<AuthorsEntity>>();
+            return response;
         }
 
         public async Task<bool> DeleteAuthorAsync(int authorId, string token)
