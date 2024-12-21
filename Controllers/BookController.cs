@@ -34,6 +34,20 @@ namespace ClientSideLibraryManagementSystem.Controllers
             }
             return View(bookmodel);
         }
+
+        [Route("Book/AllBooks")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllAuthors([FromQuery] string? query = null)
+        {
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            var authors = await _bookService.GetAllBooksAsync(token, query);
+            return Json(authors);
+        }
+
         [Route("Book/Id/{bookId}")]
         [HttpGet("{bookId}")]
         public async Task<IActionResult> Id([FromRoute]int bookId)

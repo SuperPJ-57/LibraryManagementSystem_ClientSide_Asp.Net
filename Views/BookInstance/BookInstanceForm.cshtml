@@ -18,20 +18,21 @@
                         <label for="BarCode" class="form-label">Bar Code</label>
                         <input type="text" class="form-control" id="barcode" value="@(Model.BookInstanceDetail!=null?@Model.BookInstanceDetail.BarCode:"")" asp-for="Book.BarCode" required readonly="@(Model.BookInstanceDetail!=null?true:false)">
                     </div>
-                    
-                    <div class="col-md-6">
-                        <label for="Book Id" class="form-label">Book Id</label>
-                        <input type="text" class="form-control" id="bookId" value="@(Model.BookInstanceDetail!=null?@Model.BookInstanceDetail.BookId:"")" asp-for="Book.BookId" required>
-                    </div>
 
-                   
 
-                    <div class="col-md-6">
+                    <div class="col-md-6" style="position:relative;">
                         <label for="Book Title" class="form-label">Book Title</label>
-                        <input type="text" class="form-control" value="@(Model.BookInstanceDetail!=null?@Model.BookInstanceDetail.Title:"")" id="Title" readonly>
+                        <input type="text" class="form-control" value="@(Model.BookInstanceDetail!=null?@Model.BookInstanceDetail.Title:"")" id="title" >
+                        <div id="suggestions"></div>
                     </div>
+                    
+                    <input type="text" class="form-control" id="bookId" value="@(Model.BookInstanceDetail!=null?@Model.BookInstanceDetail.BookId:"")" asp-for="Book.BookId" required hidden>
 
-                   
+                    <div class="col-md-6">
+                        <label for="ISBN" class="form-label">ISBN</label>
+                        <input type="text" class="form-control" id="isbn" value="@(Model.BookInstanceDetail!=null?@Model.BookInstanceDetail.ISBN:"")"  required>
+                    </div>                                    
+                                      
                   
 
                     <div class="col-md-6">
@@ -54,40 +55,62 @@
     </div>
 </div>
 
-<script>
+@section scripts{
+    <script>
 
-    document.getElementById('bookId').addEventListener('blur', async function () {
-        const bookId = this.value; // Get the value of the input field
-
-        if (bookId) {
-            try {
-                const response = await fetch(`/Book/Id/${bookId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
-                }
-
-                const book = await response.json(); // Parse the JSON response
-
-                if (book) {
-                    document.getElementById('Title').value = book.title || 'Title not found';
+        $(document).ready(function () {
+            $('#title').on('input', function () {
+                const query = encodeURIComponent($(this).val());
+                console.log(query)
+                if (query.length > 0) {
+                    $.ajax({
+                        url: `https://localhost:7189/Book/AllBooks/`, // Replace with your API endpoint
+                        type: 'GET',
+                        data: { query: query },
+                        success: function (data) {
+                            $('#suggestions').empty();
+                            if (data.length > 0) {
+                                data.forEach(item => {
+                                    console.log(item.title)
+                                    $('#suggestions').append(`<div id="${item.bookId}"><span>${item.title}</span><span class="ms-2"><sub>ISBN: ${item.isbn}</sub></span></div>`);
+                                });
+                            } else {
+                                $('#suggestions').append('<div>No suggestions found</div>');
+                            }
+                        },
+                        error: function () {
+                            $('#suggestions').empty().append('<div>Error fetching suggestions</div>');
+                        }
+                    });
                 } else {
-                    document.getElementById('Title').value = 'No book title found for the given ID.';
+                    $('#suggestions').empty();
                 }
-            } catch (error) {
-                
-                document.getElementById('Title').value = 'Failed to retrieve book title. Please check the book ID and try again.';
-            }
-        }
+            });
 
-    });
+            // Handle click on suggestion
+            $('#suggestions').on('click', 'div', function () {
+                let id = $(this).attr('id')
+                let children = $(this).children()
+                let isbn = children[1].innerText
+                let title = children[0].innerText
 
-</script>
+                $('#title').val(title);
+                $('#bookId').val(id)
+                $('#isbn').val(isbn.slice(6))
+                $('#suggestions').empty();
+            });
+
+            // Close suggestions when clicking outside
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('#title, #suggestions').length) {
+                    $('#suggestions').empty();
+                }
+            });
+
+        });
+    </script>
+}
+
 
 
 
@@ -96,6 +119,30 @@
 
 
 <style>
+    /*input suggestions*/
+    #suggestions {
+        position: absolute;
+        top: 100%;
+        z-index: 1000;
+        border-radius: 4px;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 10.2);
+        width: 97%;
+        background: white;
+    }
+
+
+    #suggestions div {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+            #suggestions div:hover {
+                background-color: #255D81;
+                color: white;
+            }
+
+
+
     .btn-primary {
         background-color: #255D81;
         border-color: #255D81;
@@ -140,3 +187,41 @@
             border-color: #ced4da;
         }
 </style>
+
+@*
+
+<script>
+
+    // document.getElementById('bookId').addEventListener('blur', async function () {
+    //     const bookId = this.value; Get the value of the input field
+
+    //     if (bookId) {
+    //         try {
+    //             const response = await fetch(`/Book/Id/${bookId}`, {
+    //                 method: 'GET',
+    //                 headers: {
+    //                     'Content-Type': 'application/json'
+    //                 }
+    //             });
+
+    //             if (!response.ok) {
+    //                 throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    //             }
+
+    //             const book = await response.json(); Parse the JSON response
+
+    //             if (book) {
+    //                 document.getElementById('Title').value = book.title || 'Title not found';
+    //             } else {
+    //                 document.getElementById('Title').value = 'No book title found for the given ID.';
+    //             }
+    //         } catch (error) {
+
+    //             document.getElementById('Title').value = 'Failed to retrieve book title. Please check the book ID and try again.';
+    //         }
+    //     }
+
+    // });
+
+</script>
+*@

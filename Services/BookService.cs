@@ -12,13 +12,18 @@ namespace ClientSideLibraryManagementSystem.Services
         {
             _httpClient = httpClient;
         }
-        public async Task<IEnumerable<BooksEntity>> GetAllBooksAsync(string token)
+        public async Task<IEnumerable<BooksEntity>> GetAllBooksAsync(string token,string? query=null)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await _httpClient.GetAsync("https://localhost:7084/api/Books");
-            response.EnsureSuccessStatusCode();
+            var requestUrl = "https://localhost:7084/api/Books";
+            if (!string.IsNullOrEmpty(query))
+            {
+                // Append the query parameter to the URL
+                requestUrl = $"{requestUrl}?query={Uri.EscapeDataString(query)}";
+            }
+            var response = await _httpClient.GetFromJsonAsync<IEnumerable<BooksEntity>>(requestUrl);
 
-            return await response.Content.ReadFromJsonAsync<IEnumerable<BooksEntity>>();
+            return response;
         }
         public async Task<bool> AddBookAsync(BooksEntity book,string token)
         {
