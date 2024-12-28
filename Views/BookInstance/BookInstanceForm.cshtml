@@ -64,7 +64,7 @@
                 console.log(query)
                 if (query.length > 0) {
                     $.ajax({
-                        url: `https://localhost:7189/Book/AllBooks/`, // Replace with your API endpoint
+                        url: `https://localhost:7189/Book/AllBooks/`, 
                         type: 'GET',
                         data: { query: query },
                         success: function (data) {
